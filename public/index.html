@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Khushal Analyzer Pro</title>
+  <link rel="stylesheet" href="/style.css" />
+</head>
+<body>
+  <div class="container">
+    <h1>Khushal Analyzer Pro</h1>
+
+    <form id="uploadForm">
+      <input type="file" id="fileInput" accept=".txt,.smali,.xml,.java,.apk,.zip" />
+      <button type="submit">📤 Scan File</button>
+    </form>
+
+    <div id="status"></div>
+    <div id="results"></div>
+  </div>
+
+  <script>
+    const form = document.getElementById('uploadForm');
+    const fileInput = document.getElementById('fileInput');
+    const status = document.getElementById('status');
+    const results = document.getElementById('results');
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const file = fileInput.files[0];
+      if (!file) return alert('Please select a file.');
+
+      status.innerText = "⏳ Uploading and scanning...";
+      results.innerHTML = "";
+
+      const formData = new FormData();
+      formData.append('file', file);
+
+      const res = await fetch('/api/scan', {
+        method: 'POST',
+        body: formData
+      });
+
+      const data = await res.json();
+      status.innerText = `✅ Scan complete. Matches found: ${data.matches.length}`;
+      results.innerHTML = `<pre>${data.matches.join('\n') || 'No matches found.'}</pre>`;
+    });
+  </script>
+</body>
+</html>
