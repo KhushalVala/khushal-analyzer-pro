@@ -1,1 +1,0 @@
-# khushal-analyzer-pro
